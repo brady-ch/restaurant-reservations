@@ -79,3 +79,51 @@ export const createReservation = async (data, signal) => {
     .then(formatReservationDate)
     .then(formatReservationTime);
 };
+
+export const createTable = async (data, signal) => {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  data.capacity = +data.capacity;
+  return await fetchJson(url, {
+    headers,
+    signal,
+    method: "POST",
+    body: JSON.stringify({ data }),
+  });
+};
+
+export const readReservation = async (reservation_id, signal) => {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
+  return await fetchJson(url, {
+    headers,
+    signal,
+  }).then(formatReservationDate);
+};
+
+export const listTables = async (signal) => {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, {
+    headers,
+    signal,
+  });
+};
+
+export const updateTable = async (table_id, reservation_id, signal) => {
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
+
+  return await fetchJson(url, {
+    headers,
+    signal,
+    method: "PUT",
+    body: JSON.stringify({ data: { reservation_id } }),
+  });
+};
+
+export const clearTable = async (table_id, signal) => {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+
+  return await fetch(url, {
+    headers,
+    signal,
+    method: "DELETE",
+  });
+};

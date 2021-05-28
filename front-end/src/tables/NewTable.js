@@ -1,27 +1,28 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import ErrorAlert from "../layout/ErrorAlert";
+import { createTable } from "../utils/api";
 
 export default function NewTable() {
   const history = useHistory();
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({ table_name: "", capacity: 1 });
+  const [formData, setFormData] = useState({ table_name: "", capacity: null });
 
   function handleChange({ target }) {
     setFormData({ ...formData, [target.name]: target.value });
   }
 
-  function validateFields() {
-    return true;
-  }
-
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-
-    if (validateFields()) {
-    }
+    createTable(formData)
+      .then(() => history.push(`/dashboard`))
+      .catch((error) => {
+        setError(error);
+      });
   }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="container">
         <div className="row mt-1">
           <label htmlFor="table_name" className="col-2">
@@ -36,6 +37,7 @@ export default function NewTable() {
             value={formData.table_name}
             required
             className="col-10"
+            placeholder="ex: #1, #2, #3, Bar #1"
           />
         </div>
 
@@ -47,7 +49,6 @@ export default function NewTable() {
             name="capacity"
             id="capacity"
             type="number"
-            min="1"
             onChange={handleChange}
             value={formData.capacity}
             required
@@ -55,12 +56,11 @@ export default function NewTable() {
           />
         </div>
 
-        <button type="submit" onClick={handleSubmit}>
-          Submit
-        </button>
+        <button type="submit">Submit</button>
         <button type="button" onClick={history.goBack}>
           Cancel
         </button>
+        <ErrorAlert error={error} />
       </div>
     </form>
   );

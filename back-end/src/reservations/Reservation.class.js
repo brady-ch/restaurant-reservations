@@ -17,7 +17,8 @@ class Reservation {
     mobile_number = null,
     reservation_date = null,
     reservation_time = null,
-    people = null
+    people = null,
+    status = null
   ) {
     this.first_name = first_name;
     this.last_name = last_name;
@@ -25,6 +26,7 @@ class Reservation {
     this.reservation_date = reservation_date;
     this.reservation_time = reservation_time;
     this.people = people;
+    this.status = status;
   }
 
   /**
@@ -52,6 +54,10 @@ class Reservation {
 
     if (typeof this.people !== "number" || this.people === 0) {
       toReturn += " people";
+    }
+
+    if (this.status === "finished" || this.status === "seated") {
+      toReturn += ` status, you entered ${this.status}`;
     }
 
     return toReturn ? toReturn : false;

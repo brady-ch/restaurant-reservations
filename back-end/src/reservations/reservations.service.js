@@ -8,6 +8,7 @@ const knex = require("../db/connection");
 const list = async (reservation_date) => {
   return await knex("reservations")
     .where({ reservation_date: reservation_date })
+    .whereNot({ status: "finished" })
     .orderBy("reservation_time", "asc");
 };
 
@@ -31,8 +32,16 @@ const read = async (reservation_id) => {
   return await knex("reservations").where({ reservation_id }).first();
 };
 
+const updateStatus = async (reservation_id, reservation_status) => {
+  return await knex("reservations")
+    .where({ reservation_id })
+    .update("status", reservation_status)
+    .then(() => read(reservation_id));
+};
+
 module.exports = {
   list,
   create,
   read,
+  updateStatus,
 };

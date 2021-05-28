@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { previous, today, next } from "../utils/date-time";
 import { useHistory } from "react-router-dom";
+import ReservationTable from "./ReservationTable";
+import TablesTable from "./TablesTable";
+import useQuery from "../utils/useQuery";
 
 /**
  * Defines the dashboard page.
@@ -13,29 +16,28 @@ import { useHistory } from "react-router-dom";
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [tables, setTables] = useState([]);
+  const [tablesError, setTablesError] = useState(null);
+  const query = useQuery();
+  const theDate = query.get("date");
   const history = useHistory();
-
-  useEffect(loadDashboard, [date]);
+  const [reRender, setReRender] = useState(true);
+  useEffect(loadDashboard, [date, history, theDate, reRender]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
+    setTablesError(null);
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    listTables(abortController.signal).then(setTables).catch(setTablesError);
     return () => abortController.abort();
   }
 
   return (
     <main>
       <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for {date}</h4>
-      </div>
-
-      <ErrorAlert error={reservationsError} />
-
-      {JSON.stringify(reservations)}
 
       <button
         type="button"
@@ -55,6 +57,21 @@ function Dashboard({ date }) {
       >
         Next
       </button>
+      <div className="d-md-flex mb-3">
+        <h4 className="mb-0">Reservations for {date}</h4>
+      </div>
+
+      <ReservationTable reservations={reservations} />
+
+      <ErrorAlert error={reservationsError} />
+
+      <TablesTable
+        tables={tables}
+        reRender={reRender}
+        setReRender={setReRender}
+      />
+
+      <ErrorAlert error={tablesError} />
     </main>
   );
 }
