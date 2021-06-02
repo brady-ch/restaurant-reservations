@@ -15,7 +15,7 @@ const update = async (table_id, reservation_id) => {
   return await knex("tables")
     .where({ table_id })
     .update("reservation_id", reservation_id)
-    .then(() => reservationService.updateStatus(reservation_id, "seated")); //TODO: change status to seated in reservation
+    .then(() => reservationService.updateStatus(reservation_id, "seated"));
 };
 
 const read = async (table_id) => {

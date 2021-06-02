@@ -128,7 +128,11 @@ const validateStatus = async (req, res, next) => {
  * @param {*} res
  */
 const list = async (req, res) => {
-  res.json({ data: await service.list(req.query.date) });
+  if (req.query.mobile_number) {
+    res.json({ data: await service.search(req.query.mobile_number) });
+  } else {
+    res.json({ data: await service.list(req.query.date) });
+  }
 };
 
 /**

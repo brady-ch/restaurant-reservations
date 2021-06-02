@@ -8,6 +8,8 @@ import { today } from "../utils/date-time";
 import NewReservation from "../reservations/NewReservation";
 import useQuery from "../utils/useQuery";
 import SeatReservation from "../reservations/SeatReservation";
+import Search from "../search/Search";
+import { useState } from "react";
 /**
  * Defines all the routes for the application.
  *
@@ -18,6 +20,7 @@ import SeatReservation from "../reservations/SeatReservation";
 function Routes() {
   const query = useQuery();
   const date = query.get("date") ? query.get("date") : today();
+  const [reRender, setReRender] = useState(true);
 
   return (
     <Switch>
@@ -28,13 +31,16 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path="/dashboard">
-        <Dashboard date={date} />
+        <Dashboard date={date} reRender={reRender} setReRender={setReRender} />
       </Route>
       <Route exact={true} path="/reservations/new">
         <NewReservation />
       </Route>
       <Route exact path="/tables/new">
         <NewTable />
+      </Route>
+      <Route exact path="/search">
+        <Search reRender={reRender} setReRender={setReRender} />
       </Route>
       <Route exact path="/reservations/:reservation_id/seat">
         <SeatReservation />

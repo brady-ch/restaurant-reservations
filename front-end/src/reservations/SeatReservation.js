@@ -42,9 +42,7 @@ export default function SeatReservation() {
       updateTable(selected.table_id, reservation_id, abortController.signal)
         .then(() =>
           history.push(
-            `/dashboard?date=${date.getFullYear()}-${date.getMonth() + 1}-${
-              date.getDate() + 1
-            }`
+            `/dashboard?date=${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
           )
         )
         .catch((error) => setError(error));
