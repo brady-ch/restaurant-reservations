@@ -93,7 +93,7 @@ const reservationExists = async (req, res, next) => {
 const validateStatus = async (req, res, next) => {
   const reservation_id = req.params.reservation_id;
   const reservation = req.body.data;
-  const currentRes = await service.read(reservation_id);
+  const currentRes = res.locals.reservation;
   if (currentRes.status === "finished") {
     return next({
       status: 400,
@@ -104,7 +104,8 @@ const validateStatus = async (req, res, next) => {
     !(
       reservation.status === "booked" ||
       reservation.status === "seated" ||
-      reservation.status === "finished"
+      reservation.status === "finished" ||
+      reservation.status === "cancelled"
     )
   ) {
     return next({
@@ -163,6 +164,14 @@ const update = async (req, res, next) => {
   });
 };
 
+const updateReservation = async (req, res, next) => {
+  const reser = {
+    reservation_id: req.params.reservation_id,
+    ...res.locals.reservation,
+  };
+  res.json({ data: await service.updateReservation(reser) });
+};
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -172,6 +181,13 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
+  updateReservation: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(validateData),
+    asyncErrorBoundary(isAfterNow),
+    asyncErrorBoundary(isNotClosed),
+    asyncErrorBoundary(updateReservation),
+  ],
   update: [
     asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(validateStatus),

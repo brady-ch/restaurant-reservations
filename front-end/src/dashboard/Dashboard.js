@@ -61,7 +61,13 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
 
-      <ReservationTable reservations={reservations} />
+      <ReservationTable
+        reservations={reservations}
+        reRender={reRender}
+        setReRender={setReRender}
+        reservationsError={reservationsError}
+        setReservationsError={setReservationsError}
+      />
 
       <ErrorAlert error={reservationsError} />
 

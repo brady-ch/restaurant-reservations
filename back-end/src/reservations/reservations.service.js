@@ -9,6 +9,7 @@ const list = async (reservation_date) => {
   return await knex("reservations")
     .where({ reservation_date: reservation_date })
     .whereNot({ status: "finished" })
+    .whereNot({ status: "cancelled" })
     .orderBy("reservation_time", "asc");
 };
 
@@ -48,10 +49,19 @@ function search(mobile_number) {
     .orderBy("reservation_date");
 }
 
+async function updateReservation(reservation) {
+  const reservation_id = reservation.reservation_id;
+  return await knex("reservations")
+    .where({ reservation_id })
+    .update(reservation)
+    .then(() => read(reservation_id));
+}
+
 module.exports = {
   list,
   create,
   read,
   updateStatus,
   search,
+  updateReservation,
 };

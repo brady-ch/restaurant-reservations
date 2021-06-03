@@ -10,6 +10,7 @@ import useQuery from "../utils/useQuery";
 import SeatReservation from "../reservations/SeatReservation";
 import Search from "../search/Search";
 import { useState } from "react";
+import EditReservation from "../reservations/EditReservation";
 /**
  * Defines all the routes for the application.
  *
@@ -44,6 +45,9 @@ function Routes() {
       </Route>
       <Route exact path="/reservations/:reservation_id/seat">
         <SeatReservation />
+      </Route>
+      <Route exact path="/reservations/:reservation_id/edit">
+        <EditReservation reRender={reRender} setReRender={setReRender} />
       </Route>
       <Route>
         <NotFound />

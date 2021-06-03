@@ -1,6 +1,23 @@
 import React from "react";
+import { updateReservationStatus } from "../utils/api";
 
-export default function ReservationTable({ reservations }) {
+export default function ReservationTable({
+  reservations,
+  reRender,
+  setReRender,
+  setreservationsError,
+}) {
+  function handleCancel(resId) {
+    const confirm = window.confirm(
+      "Do you want to cancel this reservation? This cannot be undone."
+    );
+    if (confirm) {
+      updateReservationStatus(resId)
+        .then(() => setReRender(!reRender))
+        .catch(setreservationsError);
+    }
+  }
+
   return (
     <table className="table table-striped">
       <thead className="thead-dark">
@@ -14,6 +31,8 @@ export default function ReservationTable({ reservations }) {
           <th scope="col">Status</th>
           <th scope="col">People</th>
           <th scope="col">Seat</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Cancel</th>
         </tr>
       </thead>
       <tbody>
@@ -32,15 +51,40 @@ export default function ReservationTable({ reservations }) {
               </th>
               <td>{element.people}</td>
               {element.status === "booked" ? (
-                <td>
-                  <a
-                    className="btn btn-primary"
-                    href={`/reservations/${reservation_id}/seat`}
-                  >
-                    Seat
-                  </a>
-                </td>
-              ) : null}
+                <>
+                  <td>
+                    <a
+                      className="btn btn-primary"
+                      href={`/reservations/${reservation_id}/seat`}
+                    >
+                      Seat
+                    </a>
+                  </td>
+                  <td>
+                    <a
+                      className="btn btn-secondary"
+                      href={`/reservations/${reservation_id}/edit`}
+                    >
+                      Edit
+                    </a>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      data-reservation-id-cancel={element.reservation_id}
+                      onClick={() => handleCancel(element.reservation_id)}
+                    >
+                      Cancel
+                    </button>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </>
+              )}
             </tr>
           );
         })}

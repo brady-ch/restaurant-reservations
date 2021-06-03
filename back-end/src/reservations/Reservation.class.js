@@ -36,7 +36,7 @@ class Reservation {
     return {
       first_name: /\w{1,100}/,
       last_name: /\w{1,100}/,
-      mobile_number: /([0-9]{3}[-][0-9]{3}[-][0-9]{4})|([0-9]{3}[-][0-9]{4})/,
+      mobile_number: /(\d{3}([-])?)?\d{3}([-])?\d{4}/,
       reservation_date: /[0-9]{4}-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])/,
       reservation_time: /([0-1][0-9]|2[0-4]):[0-5][0-9]/,
       people: /[0-9]{1,3}/,

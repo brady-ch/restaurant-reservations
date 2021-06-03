@@ -136,3 +136,25 @@ export const clearTable = async (table_id, signal) => {
     method: "DELETE",
   });
 };
+
+export const updateReservationStatus = async (reservation_id, signal) => {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+
+  return await fetchJson(url, {
+    headers,
+    signal,
+    method: "PUT",
+    body: JSON.stringify({ data: { status: "cancelled" } }),
+  });
+};
+
+export const updateReservation = async (reservation, signal) => {
+  const url = `${API_BASE_URL}/reservations/${reservation.reservation_id}`;
+
+  return await fetchJson(url, {
+    headers,
+    signal,
+    method: "PUT",
+    body: JSON.stringify({ data: reservation }),
+  });
+};
