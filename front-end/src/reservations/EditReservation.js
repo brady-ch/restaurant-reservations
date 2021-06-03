@@ -38,7 +38,6 @@ export default function EditReservation({ reRender, setReRender }) {
 
   return (
     <div className="container">
-      {JSON.stringify(reservation)}
       <form>
         <div className="row mt-1">
           <label htmlFor="first_name" className="col-2">
