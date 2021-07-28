@@ -47,5 +47,10 @@
   },
   "keywords": [],
   "author": "Thinkful, Inc.",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "knex": "^0.95.8",
+    "pg": "^8.7.1",
+    "postgres": "^1.0.2"
+  }
 }
